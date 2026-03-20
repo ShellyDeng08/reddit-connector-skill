@@ -1,22 +1,33 @@
 # reddit-connector-skill
 
-A Claude Code skill that enables browsing Reddit using the public JSON API — no API keys, no MCP server, just `curl` + `jq`.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Claude Code](https://img.shields.io/badge/Claude_Code-Skill-blueviolet)](https://docs.anthropic.com/en/docs/claude-code)
+[![No API Key](https://img.shields.io/badge/API_Key-Not_Required-brightgreen)]()
 
-## What is this?
+A **Claude Code Skill** that enables AI assistants to browse Reddit — search posts, read comments, view subreddits, and check user profiles. No MCP server, no API key, just `curl` + `jq`.
 
-This is a [Claude Code Skill](https://docs.anthropic.com/en/docs/claude-code) — a markdown file that teaches Claude how to perform tasks. When installed, Claude can search Reddit posts, browse subreddits, read comments, and view user profiles by making HTTP requests to Reddit's public `.json` endpoints.
+> **Skills vs MCP**: This is a lightweight alternative to [reddit-connector-mcp](https://github.com/ShellyDeng08/reddit-connector-mcp). Instead of running a persistent MCP server process, this skill teaches Claude to call Reddit's public JSON API directly via CLI — fewer tokens, zero dependencies, same capabilities.
 
-## Capabilities
+**Keywords**: Reddit API, Reddit Skill, Claude Code Skill, Reddit CLI, Reddit JSON API, Reddit search, Reddit scraper, AI Reddit browser, Claude Code plugin, Reddit connector, Reddit data, subreddit search, Reddit comments API
 
-- **Search posts** across all of Reddit or within a specific subreddit
-- **Browse subreddit posts** sorted by hot, new, top, or rising
-- **Read post comments** with author, score, and body text
-- **View user profiles** including karma and account age
-- **View user activity** — recent posts and comments
+---
 
-## Installation
+## Features
 
-### Option 1: Project-level (recommended)
+- **Search Reddit** — search across all of Reddit or within a specific subreddit
+- **Browse Subreddits** — get posts sorted by hot, new, top, or rising
+- **Read Comments** — fetch full comment threads for any post
+- **User Profiles** — view karma, account age, and account details
+- **User Activity** — recent posts and comments from any user
+- **No API Key Required** — uses Reddit's public `.json` endpoints
+- **Zero Dependencies** — only needs `curl` and `jq` (pre-installed on most systems)
+- **Cross-Platform** — works on macOS, Linux, and WSL
+
+---
+
+## Quick Start
+
+### Option 1: Claude Code Project Settings (Recommended)
 
 Add to your project's `.claude/settings.json`:
 
@@ -28,31 +39,91 @@ Add to your project's `.claude/settings.json`:
 }
 ```
 
-### Option 2: User-level
+### Option 2: User-Level Settings (All Projects)
 
-Add to `~/.claude/settings.json` to make it available in all projects.
+Add to `~/.claude/settings.json`:
+
+```json
+{
+  "skills": [
+    "/path/to/reddit-connector-skill/reddit-connector-skill.md"
+  ]
+}
+```
+
+### Option 3: Copy into Your Project
+
+```bash
+mkdir -p .claude/skills
+cp reddit-connector-skill.md .claude/skills/
+```
+
+---
 
 ## Requirements
 
-- `curl` (pre-installed on macOS/Linux)
-- `jq` (install via `brew install jq` or `apt install jq`)
+| Tool | Install | Notes |
+|------|---------|-------|
+| `curl` | Pre-installed on macOS/Linux | Ships with all modern OS |
+| `jq` | `brew install jq` / `apt install jq` | JSON processor |
 
-## How it works
+---
 
-Reddit serves JSON responses at any URL by appending `.json`. For example:
+## Usage
 
-- `https://www.reddit.com/r/programming.json` — subreddit posts
-- `https://www.reddit.com/search.json?q=rust` — search results
-- `https://www.reddit.com/user/spez/about.json` — user profile
+Once installed, just talk to Claude naturally:
 
-This skill teaches Claude the exact `curl` commands and `jq` filters to query these endpoints and parse the responses into clean, readable output. No API key is needed — Reddit allows ~60 unauthenticated requests per minute.
+> "Search Reddit for posts about Claude AI"
+>
+> "Show me the top posts this week on r/programming"
+>
+> "Read the comments on this Reddit post: https://reddit.com/r/..."
+>
+> "What's u/spez's karma?"
+>
+> "Show me recent posts from u/spez"
 
-## Why a Skill instead of an MCP server?
+---
 
-- **Zero dependencies** — no Node.js, no npm install, no running processes
-- **No configuration** — no API keys, no environment variables
-- **Transparent** — every action is a visible `curl` command
-- **Lightweight** — a single markdown file vs. a full TypeScript project
+## How It Works
+
+Reddit serves JSON at any URL by appending `.json`:
+
+| Endpoint | URL Pattern |
+|----------|-------------|
+| Search | `reddit.com/search.json?q=QUERY` |
+| Subreddit | `reddit.com/r/SUBREDDIT/hot.json` |
+| Post comments | Append `.json` to any post URL |
+| User profile | `reddit.com/user/USERNAME/about.json` |
+| User posts | `reddit.com/user/USERNAME/submitted.json` |
+
+The skill teaches Claude the exact `curl` commands and `jq` filters to query these endpoints. No API key needed — Reddit allows ~60 unauthenticated requests per minute.
+
+---
+
+## Skill vs MCP Comparison
+
+| | reddit-connector-skill | reddit-connector-mcp |
+|---|---|---|
+| **Setup** | Copy one `.md` file | `npm install` + configure MCP |
+| **Runtime** | No process needed | Persistent Node.js server |
+| **Token cost** | ~4KB on demand | Tool schemas loaded every session |
+| **Dependencies** | `curl` + `jq` | Node.js + npm |
+| **API key** | Not required | Not required |
+| **Capabilities** | Same 5 operations | Same 5 operations |
+| **Platform** | Claude Code only | Any MCP-compatible AI |
+
+Choose **Skill** for lightweight Claude Code usage. Choose **MCP** if you need cross-platform compatibility (Cursor, Windsurf, etc.).
+
+---
+
+## Related Projects
+
+- [reddit-connector-mcp](https://github.com/ShellyDeng08/reddit-connector-mcp) — MCP server version (Node.js)
+- [youtube-connector-skill](https://github.com/ShellyDeng08/youtube-connector-skill) — YouTube Skill for Claude Code
+- [rednote-analyzer-mcp](https://github.com/ShellyDeng08/rednote-analyzer-mcp) — Xiaohongshu (小红书) MCP analyzer
+
+---
 
 ## License
 
